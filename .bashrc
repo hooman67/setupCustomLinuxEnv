@@ -92,6 +92,7 @@ fi
 
 
 ##############################################################
+alias hs='screen -x hsScreen'
 #HS some more ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
