@@ -1,0 +1,319 @@
+Van19couveR90$
+
+da
+cudatoolkit               10.0.130                      0  
+pytorch-nightly           1.0.0.dev20190328 py2.7_cuda10.0.130_cudnn7.4.2_0    pytorch
+
+
+
+# .
+# training with darknet this works with everything on GPU2 and remote:
+./darknet detector train hsHeadDetector_try1/headData.data hsHeadDetector_try1/detectHead.cfg hsHeadDetector_try1/darknet53.conv.74 -gpus 2,3 -dont_show -mjpeg_port 8091 -map >> hsHeadDetector_try1/trainingLogs.log
+
+# with this flag you can start from a check point but from zero iteration: -clear 1
+
+
+
+#test on images with darknetHead:
+./darknet detector test ../darknet_alex/hsHeadDetector_darkPreTrained/config/headData.data ../darknet_alex/hsHeadDetector_darkPreTrained/config/detectHead.cfg headDetector/checkpointWeights/detectHead_last.weights data/person.jpg -thresh 0.05
+
+
+# for evaluation
+python pascalvoc.py -gt /home/hooman/HollywoodHeads_dataset/labels_darknet_testSet/ -det /home/hooman/darknetHeadDetector/hsTextPreds_official/ -t 0.5 -gtformat xywh -detformat xywh -sp /home/hooman/darknetHeadDetector/temp/
+
+
+clear;python demo.py --sp --indir /home/hooman/AlphaPose/hsImages --outdir /home/hooman/AlphaPose/hsRes
+
+python PoseFlow/tracker-general.py --imgdir /home/hooman/AlphaPose/hsImages --in_json /home/hooman/AlphaPose/hsRes/alphapose-results.json --out_json /home/hooman/AlphaPose/hsRes/alphapose-out.json --visdir /home/hooman/AlphaPose/hsRes/
+
+
+
+#To run hsTest that saves images and labels with darknet_alex:
+
+./darknet detector hsTest hsHeadDetector_try5_defaultAnchors_onHardHats_startFromImageNet/test.data hsHeadDetector_try5_defaultAnchors_onHardHats_startFromImageNet/yolov3-vest.cfg hsHeadDetector_try5_defaultAnchors_onHardHats_startFromImageNet/yolov3-vest_17500_0.988592.weights 0.25 0.45 0.5 /home/hooman/darknet_alex/hsHeadDetector_try5_defaultAnchors_onHardHats_startFromImageNet/results_onTestSet /home/hooman/hardHat_dataset/testImages/*
+
+** format is:
+./darknet detector hsTest data.data config wigths confThresh, nms_thresh, hier_thresh, saveImagesAndLabelsPath, predsImages  
+
+
+python hs_map_plotter.py --darknet '/home/hooman/darknet_alex/' --data '/home/hooman/hardHat_dataset/testSet.data' --config '/home/hooman/darknet_alex/hsHeadDetector_try6_onHH_vestClasses_1000Images/yolov3-vest.cfg' --checkpoints '/home/hooman/darknet_alex/hsHeadDetector_try6_onHH_vestClasses_1000Images/checkpointWeights/' --save '/home/hooman/darknet_alex/hsHeadDetector_try6_onHH_vestClasses_1000Images/valPlots/' --csv /home/hooman/darknet_alex/hsHeadDetector_try6_onHH_vestClasses_1000Images/valPlots/validMaps.txt
+
+
+
+
+
+
+##############################################################################################################
+./darknet detector map ../darknet_alex/hsHeadDetector_darkPreTrained/config/headData.data ../darknet_alex/hsHeadDetector_darkPreTrained/config/detectHead.cfg ../darknet_alex/hsHeadDetector_darkPreTrained/preTrained/detectHead_58000.weights
+
+
+ detections_count = 14905, unique_truth_count = 11536  
+class_id = 0, name = head, ap = 92.43%   	 (TP = 9870, FP = 202) 
+
+ for conf_thresh = 0.25, precision = 0.98, recall = 0.86, F1-score = 0.91 
+ for conf_thresh = 0.25, TP = 9870, FP = 202, FN = 1666, average IoU = 78.55 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.924317, or 92.43 % 
+Total Detection Time: 125.000000 Seconds
+
+Set -points flag:
+ `-points 101` for MS COCO 
+ `-points 11` for PascalVOC 2007 (uncomment `difficult` in voc.data) 
+ `-points 0` (AUC) for ImageNet, PascalVOC 2010-2012, your custom dataset
+
+
+./darknet detector map ../darknet_alex/hsHeadDetector_darkPreTrained/config/headData.data ../darknet_alex/hsHeadDetector_darkPreTrained/config/detectHead.cfg ../darknet_alex/hsHeadDetector_darkPreTrained/checkpointWeights/detectHead_last.weights
+
+ detections_count = 17359, unique_truth_count = 11536  
+class_id = 0, name = head, ap = 90.39%   	 (TP = 9675, FP = 370) 
+
+ for conf_thresh = 0.25, precision = 0.96, recall = 0.84, F1-score = 0.90 
+ for conf_thresh = 0.25, TP = 9675, FP = 370, FN = 1861, average IoU = 77.14 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.903926, or 90.39 % 
+Total Detection Time: 127.000000 Seconds
+
+
+./darknet detector map ../darknet_alex/hsHeadDetector_darkPreTrained/config/headData.data ../darknet_alex/hsHeadDetector_darkPreTrained/config/detectHead.cfg ../darknet_alex/hsHeadDetector_darkPreTrained/checkpointWeights/detectHead_81000.weights 
+
+ detections_count = 15863, unique_truth_count = 11536  
+class_id = 0, name = head, ap = 90.14%   	 (TP = 9655, FP = 337) 
+
+ for conf_thresh = 0.25, precision = 0.97, recall = 0.84, F1-score = 0.90 
+ for conf_thresh = 0.25, TP = 9655, FP = 337, FN = 1881, average IoU = 77.37 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.901386, or 90.14 % 
+Total Detection Time: 130.000000 Seconds
+
+##############################################################################################################
+
+
+
+
+##################################### PRE_TRAINED on HW ############################
+./darknet detector map hsHeadDetector_try1_defaultAnchors/headData_test.data ../darknetHeadDetector/headDetector/config/detectHead.cfg hsHeadDetector_darkPreTrained/preTrained/detectHead_58000.weights
+
+detections_count = 6688, unique_truth_count = 5007  
+class_id = 0, name = head, ap = 18.08%   	 (TP = 755, FP = 535) 
+
+ for conf_thresh = 0.25, precision = 0.59, recall = 0.15, F1-score = 0.24 
+ for conf_thresh = 0.25, TP = 755, FP = 535, FN = 4252, average IoU = 41.39 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.180760, or 18.08 % 
+Total Detection Time: 10.000000 Seconds
+
+
+
+
+
+./darknet detector map hsHeadDetector_try1_defaultAnchors/headData.data ../darknetHeadDetector/headDetector/config/detectHead.cfg hsHeadDetector_darkPreTrained/preTrained/detectHead_58000.weights
+
+detections_count = 5963, unique_truth_count = 3318  
+class_id = 0, name = head, ap = 19.36%   	 (TP = 538, FP = 429) 
+
+ for conf_thresh = 0.25, precision = 0.56, recall = 0.16, F1-score = 0.25 
+ for conf_thresh = 0.25, TP = 538, FP = 429, FN = 2780, average IoU = 39.82 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.193629, or 19.36 % 
+Total Detection Time: 10.000000 Seconds
+
+
+
+
+./darknet detector map ../HollywoodHeads_dataset/headData_test.data ../darknetHeadDetector/headDetector/config/detectHead.cfg hsHeadDetector_darkPreTrained/preTrained/detectHead_58000.weights
+
+
+detections_count = 3737, unique_truth_count = 2649  
+class_id = 0, name = head, ap = 86.13%   	 (TP = 1947, FP = 68) 
+
+ for conf_thresh = 0.25, precision = 0.97, recall = 0.73, F1-score = 0.83 
+ for conf_thresh = 0.25, TP = 1947, FP = 68, FN = 702, average IoU = 75.75 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.861333, or 86.13 % 
+Total Detection Time: 28.000000 Seconds
+
+
+
+
+./darknet detector map ../HollywoodHeads_dataset/headData.data ../darknetHeadDetector/headDetector/config/detectHead.cfg hsHeadDetector_darkPreTrained/preTrained/detectHead_58000.weights
+
+
+detections_count = 14905, unique_truth_count = 11536  
+class_id = 0, name = head, ap = 92.43%   	 (TP = 9870, FP = 202) 
+
+ for conf_thresh = 0.25, precision = 0.98, recall = 0.86, F1-score = 0.91 
+ for conf_thresh = 0.25, TP = 9870, FP = 202, FN = 1666, average IoU = 78.55 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.924317, or 92.43 % 
+Total Detection Time: 145.000000 Seconds
+###################################################################################################
+
+
+
+
+
+
+
+
+############################# HS trained default anchors on BW ###############################
+./darknet detector map hsHeadDetector_try1_defaultAnchors/headData_test.data hsHeadDetector_try1_defaultAnchors/detectHead.cfg hsHeadDetector_try1_defaultAnchors/checkpointWeights/detectHead_35500_0.955930.weights
+
+detections_count = 16608, unique_truth_count = 5007  
+class_id = 0, name = head, ap = 37.04%   	 (TP = 1139, FP = 165) 
+
+ for conf_thresh = 0.25, precision = 0.87, recall = 0.23, F1-score = 0.36 
+ for conf_thresh = 0.25, TP = 1139, FP = 165, FN = 3868, average IoU = 67.67 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.370447, or 37.04 % 
+
+
+
+
+./darknet detector map hsHeadDetector_try1_defaultAnchors/headData.data hsHeadDetector_try1_defaultAnchors/detectHead.cfg hsHeadDetector_try1_defaultAnchors/checkpointWeights/detectHead_35500_0.955930.weights
+
+
+ detections_count = 4894, unique_truth_count = 3318  
+class_id = 0, name = head, ap = 95.59%   	 (TP = 3069, FP = 144) 
+
+ for conf_thresh = 0.25, precision = 0.96, recall = 0.92, F1-score = 0.94 
+ for conf_thresh = 0.25, TP = 3069, FP = 144, FN = 249, average IoU = 75.79 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.955933, or 95.59 % 
+Total Detection Time: 11.000000 Seconds
+
+
+
+
+./darknet detector map ../HollywoodHeads_dataset/headData.data hsHeadDetector_try1_defaultAnchors/detectHead.cfg hsHeadDetector_try1_defaultAnchors/checkpointWeights/detectHead_35500_0.955930.weights
+
+detections_count = 53103, unique_truth_count = 11536  
+class_id = 0, name = head, ap = 26.20%   	 (TP = 2461, FP = 1227) 
+
+ for conf_thresh = 0.25, precision = 0.67, recall = 0.21, F1-score = 0.32 
+ for conf_thresh = 0.25, TP = 2461, FP = 1227, FN = 9075, average IoU = 49.32 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.262019, or 26.20 % 
+Total Detection Time: 152.000000 Seconds
+
+
+
+./darknet detector map ../HollywoodHeads_dataset/headData_test.data hsHeadDetector_try1_defaultAnchors/detectHead.cfg hsHeadDetector_try1_defaultAnchors/checkpointWeights/detectHead_35500_0.955930.weights
+
+
+detections_count = 16608, unique_truth_count = 5007  
+class_id = 0, name = head, ap = 37.04%   	 (TP = 1139, FP = 165) 
+
+ for conf_thresh = 0.25, precision = 0.87, recall = 0.23, F1-score = 0.36 
+ for conf_thresh = 0.25, TP = 1139, FP = 165, FN = 3868, average IoU = 67.67 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.370447, or 37.04 % 
+Total Detection Time: 11.000000 Seconds
+###################################################################################################
+
+
+
+############################# HS trained custom anchors on BW #####################################
+ ./darknet detector map hsHeadDetector_try1_defaultAnchors/headData_test.data hsHeadDetector_try2_customAnchors/detectHead.cfg hsHeadDetector_try2_customAnchors/checkpointWeights/detectHead_30000_0.941239.weights
+
+
+detections_count = 19264, unique_truth_count = 5007  
+class_id = 0, name = head, ap = 32.00%   	 (TP = 963, FP = 88) 
+
+ for conf_thresh = 0.25, precision = 0.92, recall = 0.19, F1-score = 0.32 
+ for conf_thresh = 0.25, TP = 963, FP = 88, FN = 4044, average IoU = 69.78 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.319978, or 32.00 % 
+Total Detection Time: 11.000000 Seconds
+
+
+
+
+ ./darknet detector map hsHeadDetector_try1_defaultAnchors/headData.data hsHeadDetector_try2_customAnchors/detectHead.cfg hsHeadDetector_try2_customAnchors/checkpointWeights/detectHead_30000_0.941239.weights
+
+
+  detections_count = 5039, unique_truth_count = 3318  
+class_id = 0, name = head, ap = 94.15%   	 (TP = 3027, FP = 180) 
+
+ for conf_thresh = 0.25, precision = 0.94, recall = 0.91, F1-score = 0.93 
+ for conf_thresh = 0.25, TP = 3027, FP = 180, FN = 291, average IoU = 73.55 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.941477, or 94.15 % 
+Total Detection Time: 10.000000 Seconds
+
+
+
+
+./darknet detector map ../HollywoodHeads_dataset/headData.data hsHeadDetector_try2_customAnchors/detectHead.cfg hsHeadDetector_try2_customAnchors/checkpointWeights/detectHead_30000_0.941239.weights 
+
+
+ detections_count = 140160, unique_truth_count = 11536  
+class_id = 0, name = head, ap = 27.00%   	 (TP = 3424, FP = 3450) 
+
+ for conf_thresh = 0.25, precision = 0.50, recall = 0.30, F1-score = 0.37 
+ for conf_thresh = 0.25, TP = 3424, FP = 3450, FN = 8112, average IoU = 34.64 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.270032, or 27.00 % 
+Total Detection Time: 134.000000 Seconds
+
+
+
+
+ ./darknet detector map ../HollywoodHeads_dataset/headData_test.data hsHeadDetector_try2_customAnchors/detectHead.cfg hsHeadDetector_try2_customAnchors/checkpointWeights/detectHead_30000_0.941239.weights
+
+
+ detections_count = 19411, unique_truth_count = 2649  
+class_id = 0, name = head, ap = 25.74%   	 (TP = 697, FP = 510) 
+
+ for conf_thresh = 0.25, precision = 0.58, recall = 0.26, F1-score = 0.36 
+ for conf_thresh = 0.25, TP = 697, FP = 510, FN = 1952, average IoU = 40.25 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.257384, or 25.74 % 
+Total Detection Time: 27.000000 Seconds
+
+###################################################################################################
+
+
+############################# HS trained custom anchors on HH #####################################
+ ../darknet detector map trainingData.data yolov3-v
+est.cfg yolov3-vest_17500_0.988592.weights
+
+
+detections_count = 3914, unique_truth_count = 2524  
+class_id = 0, name = head, ap = 99.77%   	 (TP = 944, FP = 24) 
+class_id = 1, name = torso, ap = 99.02%   	 (TP = 761, FP = 49) 
+class_id = 2, name = person, ap = 97.79%   	 (TP = 774, FP = 37) 
+
+ for conf_thresh = 0.25, precision = 0.96, recall = 0.98, F1-score = 0.97 
+ for conf_thresh = 0.25, TP = 2479, FP = 110, FN = 45, average IoU = 79.47 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.988592, or 98.86 % 
+Total Detection Time: 4.000000 Seconds
+
+
+
+
+##################################################################################################
+AP: 91.31% (0)
+AP: 90.45% (1)
+AP: 91.73% (2)
+mAP: 91.16%
+FP: 796.0
+TP: 93.0
+FN: 65.0
+total: 861
